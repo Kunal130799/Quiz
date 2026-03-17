@@ -26,6 +26,7 @@ This document tracks the core architecture, features, and recent changes to the 
 - **[2026-03-17] AI Topic Selection**: Implemented category-based room creation with specialized "stress-relief" prompts.
 - **[2026-03-17] Anti-Repeat System**: Updated `generateQuestions` to accept a history of questions and filter out duplicates.
 - **[2026-03-17] Dependency Fix**: Resolved `MODULE_NOT_FOUND` issues by re-initializing core backend dependencies.
+- **[2026-03-17] Build Fix**: Fixed a missing `</>` tag in `RoomPage.jsx` that was causing Vercel deployment to fail. Verified locally with `npm run build`.
 
 ## 📋 Ongoing Tasks
 - [ ] Improve UI/UX responsiveness for mobile devices.

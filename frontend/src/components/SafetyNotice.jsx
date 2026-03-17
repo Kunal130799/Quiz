@@ -28,7 +28,7 @@ export default function SafetyNotice({ onAccept }) {
           <ul style={{ marginTop: '12px', paddingLeft: '20px', textAlign: 'left' }}>
             <li>Respect all players in <strong>Voice</strong> and <strong>Chat</strong>.</li>
             <li>No hate speech, harassment, or bullying.</li>
-            <li>Keep the "vibe" positive and stress-free.</li>
+            <li>Keep the 'vibe' positive and stress-free.</li>
             <li>Any inappropriate behavior may lead to being kicked.</li>
           </ul>
         </div>
