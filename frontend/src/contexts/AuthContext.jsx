@@ -30,8 +30,8 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = async (username) => {
-    const res = await api.post('/api/session', { username });
+  const login = async (username, avatar) => {
+    const res = await api.post('/api/session', { username, avatar });
     setSession(res.data.session);
     localStorage.setItem('quiz_session', JSON.stringify(res.data.session));
     return res.data.session;

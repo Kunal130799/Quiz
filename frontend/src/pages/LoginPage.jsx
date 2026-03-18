@@ -5,9 +5,19 @@ import toast from 'react-hot-toast';
 
 export default function LoginPage() {
   const [username, setUsername] = useState('');
+  const [avatar, setAvatar] = useState('https://api.dicebear.com/7.x/fun-emoji/svg?seed=Felix');
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const AVATARS = [
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Felix',
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Garfield',
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Simba',
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Nala',
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Mittens',
+    'https://api.dicebear.com/7.x/fun-emoji/svg?seed=Boots'
+  ];
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,7 +27,7 @@ export default function LoginPage() {
 
     try {
       setLoading(true);
-      await login(username);
+      await login(username, avatar);
       toast.success(`Welcome, ${username}!`);
       navigate('/');
     } catch (err) {
@@ -46,22 +56,46 @@ export default function LoginPage() {
         </div>
         <h1 className="glow-text" style={{ fontSize: '2.4rem', marginBottom: '8px' }}>AI Quiz Game</h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>
-          Fast-paced trivia rounds. Test your knowledge.
+          Enter your handle and pick a face to join the arena.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex-column" style={{ gap: '16px' }}>
+        <form onSubmit={handleSubmit} className="flex-column" style={{ gap: '24px' }}>
           <div className="input-group">
+            <label className="input-label">Username</label>
             <input
               type="text"
               className="input"
-              placeholder="Enter your username..."
+              placeholder="Your handle..."
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
               autoFocus
               maxLength={15}
-              style={{ textAlign: 'center', fontSize: '1.1rem', padding: '16px' }}
+              style={{ textAlign: 'center', fontSize: '1.1rem' }}
             />
+          </div>
+
+          <div className="input-group">
+            <label className="input-label">Pick your Vibe</label>
+            <div className="flex-center" style={{ gap: '12px', flexWrap: 'wrap', padding: '12px', background: 'var(--bg-secondary)', borderRadius: 'var(--radius)' }}>
+              {AVATARS.map((url, i) => (
+                <img
+                  key={i}
+                  src={url}
+                  alt={`Avatar ${i}`}
+                  className={`avatar avatar-md glow-border ${avatar === url ? 'selected' : ''}`}
+                  style={{ 
+                    cursor: 'pointer', 
+                    padding: '4px',
+                    background: avatar === url ? 'var(--accent)' : 'transparent',
+                    border: avatar === url ? '2px solid var(--accent-light)' : '2px solid var(--border)',
+                    transition: 'all 0.2s ease',
+                    transform: avatar === url ? 'scale(1.1)' : 'scale(1)'
+                  }}
+                  onClick={() => setAvatar(url)}
+                />
+              ))}
+            </div>
           </div>
           
           <button type="submit" className="btn btn-primary btn-lg btn-full" disabled={loading || !username.trim()} style={{ marginTop: '8px' }}>
