@@ -28,14 +28,28 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="page-center" style={{ backgroundImage: 'radial-gradient(circle at top, #1a1a35 0%, #0d0d1a 100%)' }}>
-      <div className="card" style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
-        <h1 className="glow-text" style={{ fontSize: '2rem', marginBottom: '8px' }}>💀 AI Quiz Game</h1>
+    <div className="page-center" style={{ backgroundImage: 'radial-gradient(circle at top, #1a1a35 0%, #0d0d1a 100%)', padding: '20px' }}>
+      <div className="card animate-bounce-in" style={{ maxWidth: '440px', width: '100%', textAlign: 'center', padding: '40px 32px' }}>
+        <div style={{ 
+          fontSize: '3rem', 
+          marginBottom: '20px', 
+          display: 'inline-flex', 
+          background: 'var(--accent-glow)', 
+          width: '80px', 
+          height: '80px', 
+          borderRadius: '50%', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          boxShadow: '0 0 30px var(--accent-glow)'
+        }}>
+          💀
+        </div>
+        <h1 className="glow-text" style={{ fontSize: '2.4rem', marginBottom: '8px' }}>AI Quiz Game</h1>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '32px' }}>
           Fast-paced trivia rounds. Test your knowledge.
         </p>
 
-        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+        <form onSubmit={handleSubmit} className="flex-column" style={{ gap: '16px' }}>
           <div className="input-group">
             <input
               type="text"
@@ -45,14 +59,19 @@ export default function LoginPage() {
               onChange={(e) => setUsername(e.target.value)}
               disabled={loading}
               autoFocus
-              maxLength={20}
+              maxLength={15}
+              style={{ textAlign: 'center', fontSize: '1.1rem', padding: '16px' }}
             />
           </div>
           
-          <button type="submit" className="btn btn-primary" disabled={loading || !username.trim()}>
-            {loading ? <span className="spinner" style={{ width: '20px', height: '20px', borderWidth: '2px' }}></span> : 'Enter the Void'}
+          <button type="submit" className="btn btn-primary btn-lg btn-full" disabled={loading || !username.trim()} style={{ marginTop: '8px' }}>
+            {loading ? <span className="spinner" style={{ width: '24px', height: '24px' }}></span> : 'Enter the Arena'}
           </button>
         </form>
+
+        <p style={{ marginTop: '32px', fontSize: '0.8rem', color: 'var(--text-muted)' }}>
+          By entering, you agree to have fun and not take the AI's insults personally.
+        </p>
       </div>
     </div>
   );

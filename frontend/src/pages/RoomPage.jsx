@@ -249,67 +249,69 @@ export default function RoomPage() {
   const timerRatio = currentQuestion ? timeLeft / currentQuestion.timePerQuestion : 0;
   const timerColor = timerRatio > 0.5 ? 'var(--green)' : timerRatio > 0.25 ? 'var(--yellow)' : 'var(--red)';
 
+  const [showSidebar, setShowSidebar] = useState(false);
+
   return (
     <>
       {showNotice && <SafetyNotice onAccept={() => setShowNotice(false)} />}
-      <div className="container" style={{ padding: '20px', minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: '24px' }}>
+      <div className="container" style={{ padding: '20px 0', minHeight: '100vh', display: 'flex', flexDirection: 'column', gap: '24px' }}>
       
       {/* ── HEADER ── */}
-      <header className="card" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '16px 24px' }}>
-        <div>
-          <h1 style={{ fontSize: '1.4rem' }}>{room.name}</h1>
-          <div style={{ display: 'flex', gap: '12px', marginTop: '8px', alignItems: 'center' }}>
-            <div className="badge badge-purple" onClick={copyJoinCode} style={{ cursor: 'pointer', fontSize: '1rem', letterSpacing: '2px' }}>
+      <header className="card flex-between" style={{ padding: '16px 24px', flexWrap: 'wrap', gap: '16px' }}>
+        <div style={{ flex: '1 1 auto', minWidth: '200px' }}>
+          <h1 style={{ fontSize: '1.4rem', wordBreak: 'break-word' }}>{room.name}</h1>
+          <div style={{ display: 'flex', gap: '12px', marginTop: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
+            <div className="badge badge-purple" onClick={copyJoinCode} style={{ cursor: 'pointer', fontSize: '0.9rem', letterSpacing: '2px' }}>
               Code: {room.code} 📋
             </div>
-            <div className="badge badge-cyan">
+            <div className="badge badge-cyan" style={{ fontSize: '0.8rem' }}>
                {room.status === 'waiting' ? `Topic: ${room.topic}` : room.status === 'playing' ? `${room.topic} - Round ${room.currentRound}/${room.totalRounds}` : 'Game Ended'}
             </div>
           </div>
         </div>
         
-        <div style={{ display: 'flex', gap: '12px', alignItems: 'center' }}>
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center', flexWrap: 'wrap' }}>
           <button className={`btn btn-sm ${isVideoEnabled ? 'btn-danger' : 'btn-primary'}`} onClick={handleToggleVideo}>
-            {isVideoEnabled ? '🔌 Leave Video' : '📷 Join Video'}
+            {isVideoEnabled ? '🔌 Off' : '📷 On'}
           </button>
           {isHost && room.status === 'waiting' && (
             <button className="btn btn-primary btn-sm animate-glow" onClick={handleStartGame}>
-              ▶ Start Game
+              ▶ Start
             </button>
           )}
-          {isHost && room.status === 'playing' && (
-            <button className="btn btn-danger btn-sm" onClick={handleStopGame}>
-              🛑 End Game
-            </button>
-          )}
+          <button className="btn btn-ghost btn-sm show-mobile" onClick={() => setShowSidebar(!showSidebar)}>
+             {showSidebar ? '🎮 Game' : '💬 Chat'}
+          </button>
           <button className="btn btn-ghost btn-sm" onClick={leaveRoom}>Leave</button>
         </div>
       </header>
 
       {/* ── VIDEO AREA ── */}
       {(localStream || Object.keys(remoteStreams).length > 0) && (
-        <VideoGrid 
-          localStream={localStream} 
-          remoteStreams={remoteStreams} 
-          players={room.players} 
-          session={session} 
-        />
+        <div className="w-full">
+          <VideoGrid 
+            localStream={localStream} 
+            remoteStreams={remoteStreams} 
+            players={room.players} 
+            session={session} 
+          />
+        </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 300px', gap: '24px', flex: 1, alignItems: 'start' }}>
+      <div className="sidebar-layout" style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: '24px', flex: 1, alignItems: 'start' }}>
         
         {/* ── MAIN AREA (Game / Lobby) ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+        <div style={{ display: (showSidebar && window.innerWidth < 768) ? 'none' : 'flex', flexDirection: 'column', gap: '24px', width: '100%' }}>
           
           {room.status === 'waiting' && (
-            <div className="card" style={{ textAlign: 'center', padding: '60px 20px', display: 'flex', flexDirection: 'column', gap: '16px', alignItems: 'center' }}>
+            <div className="card flex-column" style={{ textAlign: 'center', padding: '60px 20px', gap: '16px', alignItems: 'center' }}>
                <div style={{ fontSize: '4rem' }} className="animate-float">💀</div>
                <h2>Waiting for players...</h2>
                <p style={{ color: 'var(--text-secondary)' }}>Share the code <strong style={{color:'white'}}>{room.code}</strong> with your friends.</p>
-               <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '12px', justifyContent: 'center' }}>
+               <div style={{ marginTop: '20px', display: 'flex', flexWrap: 'wrap', gap: '8px', justifyContent: 'center' }}>
                  {room.players.map(p => (
-                   <div key={p.id} className="badge" style={{ padding: '8px 16px', fontSize: '0.9rem', background: 'var(--bg-secondary)', border: `1px solid ${p.id === room.hostId ? 'var(--accent)' : 'var(--border)'}` }}>
-                      <img src={p.avatar} alt="avatar" style={{ width: '24px', height: '24px', borderRadius: '50%', marginRight: '8px', verticalAlign: 'middle' }} />
+                   <div key={p.id} className="badge" style={{ padding: '8px 12px', fontSize: '0.8rem', background: 'var(--bg-secondary)', border: `1px solid ${p.id === room.hostId ? 'var(--accent)' : 'var(--border)'}` }}>
+                      <img src={p.avatar} alt="avatar" style={{ width: '20px', height: '20px', borderRadius: '50%', marginRight: '8px', verticalAlign: 'middle' }} />
                       {p.username} {p.id === room.hostId && '👑'}
                    </div>
                  ))}
@@ -318,17 +320,18 @@ export default function RoomPage() {
           )}
 
           {room.status === 'ended' && (
-            <div className="card animate-bounce-in" style={{ textAlign: 'center', padding: '60px 20px' }}>
+            <div className="card animate-bounce-in text-center" style={{ padding: '60px 20px' }}>
                <div style={{ fontSize: '4rem', marginBottom: '16px' }}>🏆</div>
                <h2 className="glow-text" style={{ fontSize: '2.5rem', marginBottom: '8px' }}>Game Over</h2>
                <p style={{ color: 'var(--text-secondary)' }}>
                  {leaderboard[0] ? `${leaderboard[0].username} survived with ${leaderboard[0].score} points!` : 'Everyone died.'}
                </p>
+               <button className="btn btn-primary" style={{ marginTop: '24px' }} onClick={() => navigate('/')}>Back to Lobby</button>
             </div>
           )}
 
           {room.status === 'playing' && currentQuestion && (
-            <div className="card animate-bounce-in" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            <div className="card animate-bounce-in flex-column" style={{ gap: '24px' }}>
                
                {/* Timer Bar */}
                {!showReveal && (
@@ -343,9 +346,9 @@ export default function RoomPage() {
                  </div>
                )}
 
-               <h2 style={{ fontSize: '1.6rem', lineHeight: '1.4' }}>{currentQuestion.question}</h2>
+               <h2 style={{ fontSize: '1.4rem', lineHeight: '1.4', wordBreak: 'break-word' }}>{currentQuestion.question}</h2>
                
-               <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+               <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '16px' }}>
                  {currentQuestion.options.map((opt, i) => {
                    const isSelected = selectedAnswer === opt;
                    
@@ -370,30 +373,30 @@ export default function RoomPage() {
                        key={i} 
                        className={`btn ${btnClass}`}
                        style={{ 
-                         padding: '20px', 
+                         padding: '16px', 
                          height: 'auto', 
                          justifyContent: 'flex-start', 
                          textAlign: 'left',
-                         fontSize: '1.1rem',
+                         fontSize: '1rem',
                          whiteSpace: 'normal',
                          border: `2px solid ${borderColor}`,
-                         opacity: (showReveal && opt !== answerResult?.correctAnswer && !isSelected) ? 0.4 : 1
+                         opacity: (showReveal && opt !== answerResult?.correctAnswer && !isSelected) ? 0.4 : 1,
+                         minHeight: '60px'
                        }}
                        disabled={!!selectedAnswer || showReveal || timeLeft === 0}
                        onClick={() => handleAnswerSubmit(opt)}
                      >
-                       <span style={{ fontWeight: 'bold', marginRight: '12px', color: 'var(--text-secondary)' }}>
+                       <span style={{ fontWeight: 'bold', marginRight: '12px', color: 'var(--text-secondary)', flexShrink: 0 }}>
                          {['A','B','C','D'][i]}.
                        </span>
-                       {opt}
+                       <span style={{ flex: 1 }}>{opt}</span>
                      </button>
                    );
                  })}
                </div>
 
-               {/* Results feedback after answering */}
                {showReveal && answerResult && (
-                 <div style={{ 
+                 <div className="animate-bounce-in" style={{ 
                    textAlign: 'center', 
                    padding: '16px', 
                    borderRadius: 'var(--radius)', 
@@ -413,13 +416,22 @@ export default function RoomPage() {
 
 
         {/* ── SIDEBAR (Leaderboard & Chat) ── */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', height: 'calc(100vh - 120px)' }}>
+        <div style={{ 
+          display: (!showSidebar && window.innerWidth < 768) ? 'none' : 'flex', 
+          flexDirection: 'column', 
+          gap: '24px', 
+          height: window.innerWidth < 768 ? 'auto' : 'calc(100vh - 120px)',
+          width: '100%' 
+        }}>
           
           {/* Leaderboard */}
-          <div className="card" style={{ padding: '16px', display: 'flex', flexDirection: 'column', gap: '12px', maxHeight: '40%' }}>
-            <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
-              Leaderboard
+          <div className="card flex-column" style={{ padding: '16px', gap: '12px', maxHeight: window.innerWidth < 768 ? '300px' : '40%' }}>
+            <h3 className="flex-between">
+              <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                Leaderboard
+              </span>
+              <span className="badge badge-purple">{room.players.length} Players</span>
             </h3>
             <div className="divider" style={{ margin: '0' }} />
             
@@ -436,18 +448,13 @@ export default function RoomPage() {
                   <div style={{ fontWeight: 'bold', color: 'var(--accent-light)', fontFamily: 'var(--font-display)' }}>
                     {p.score}
                   </div>
-                  {isHost && p.id !== session.id && (
-                    <button className="btn-icon btn-ghost" onClick={() => handleKickPlayer(p.id)} title="Kick player" style={{ padding: '4px', color: 'var(--red)' }}>
-                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-                    </button>
-                  )}
                 </div>
               ))}
             </div>
           </div>
 
           {/* Chat */}
-          <div className="card" style={{ padding: '16px', display: 'flex', flexDirection: 'column', flex: 1, overflow: 'hidden' }}>
+          <div className="card flex-column" style={{ padding: '16px', flex: 1, overflow: 'hidden', minHeight: '350px' }}>
             <h3 style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
               Trash Talk
@@ -455,7 +462,7 @@ export default function RoomPage() {
             
             <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '12px', paddingRight: '4px', marginBottom: '12px' }}>
               {chatMessages.length === 0 ? (
-                <div style={{ textAlign: 'center', color: 'var(--text-muted)', fontSize: '0.85rem', marginTop: 'auto', marginBottom: 'auto' }}>
+                <div className="flex-center" style={{ flex: 1, color: 'var(--text-muted)', fontSize: '0.85rem' }}>
                   No one is talking yet... cowards.
                 </div>
               ) : (
@@ -473,7 +480,7 @@ export default function RoomPage() {
                         borderRadius: '12px',
                         borderTopRightRadius: isMe ? '2px' : '12px',
                         borderTopLeftRadius: !isMe ? '2px' : '12px',
-                        fontSize: '0.9rem',
+                        fontSize: '0.85rem',
                         maxWidth: '90%',
                         wordBreak: 'break-word'
                       }}>
@@ -486,14 +493,14 @@ export default function RoomPage() {
               <div ref={chatEndRef} />
             </div>
 
-            <form onSubmit={handleSendChat} style={{ display: 'flex', gap: '8px', marginTop: 'auto' }}>
+            <form onSubmit={handleSendChat} className="w-full flex-between" style={{ gap: '8px' }}>
               <input 
                 type="text" 
                 className="input" 
                 value={chatInput} 
                 onChange={e => setChatInput(e.target.value)}
                 placeholder="Talk smack..."
-                style={{ padding: '8px 12px', fontSize: '0.85rem' }}
+                style={{ padding: '10px 12px', fontSize: '0.85rem' }}
                 maxLength={200}
               />
               <button type="submit" className="btn btn-primary btn-sm" disabled={!chatInput.trim()}>

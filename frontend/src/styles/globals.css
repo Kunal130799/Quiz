@@ -273,7 +273,49 @@ a { color: var(--accent-light); text-decoration: none; }
 .status-offline { background: var(--text-muted); }
 
 /* ── Responsive ── */
+@media (max-width: 1024px) {
+  .container { padding: 0 16px; }
+}
+
 @media (max-width: 768px) {
-  .modal { padding: 24px; }
+  html { font-size: 14px; }
+  .modal { padding: 24px; width: 95%; max-width: none; }
   h1 { font-size: 1.6rem !important; }
+  
+  /* Stack grid layouts on mobile */
+  .grid-2 { grid-template-columns: 1fr !important; }
+  .sidebar-layout { 
+    grid-template-columns: 1fr !important; 
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .hide-mobile { display: none !important; }
+  .show-mobile { display: block !important; }
+  
+  .btn { padding: 10px 16px; font-size: 0.9rem; }
+}
+
+/* ── Utility Classes ── */
+.flex-between { display: flex; justify-content: space-between; align-items: center; }
+.flex-center { display: flex; align-items: center; justify-content: center; }
+.flex-column { display: flex; flex-direction: column; }
+.gap-sm { gap: 8px; }
+.gap-md { gap: 16px; }
+.gap-lg { gap: 24px; }
+
+.text-center { textAlign: center; }
+.w-full { width: 100%; }
+
+/* Skeleton Loading */
+.skeleton {
+  background: linear-gradient(90deg, var(--bg-card) 25%, var(--bg-card-hover) 50%, var(--bg-card) 75%);
+  background-size: 200% 100%;
+  animation: skeleton-loading 1.5s infinite;
+  border-radius: var(--radius);
+}
+
+@keyframes skeleton-loading {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
 }

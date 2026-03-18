@@ -95,11 +95,11 @@ export default function HomePage() {
   };
 
   return (
-    <div className="container" style={{ padding: '40px 20px' }}>
+    <div className="container" style={{ padding: '40px 0' }}>
       {/* Header */}
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+      <header className="flex-between" style={{ marginBottom: '40px', flexWrap: 'wrap', gap: '20px' }}>
         <div>
-          <h1 className="glow-text" style={{ fontSize: '1.8rem' }}>AI Quiz Game</h1>
+          <h1 className="glow-text" style={{ fontSize: '2rem' }}>AI Quiz Game</h1>
           <p style={{ color: 'var(--text-secondary)' }}>Welcome back, <span style={{ color: 'var(--accent-light)', fontWeight: 'bold' }}>{session.username}</span></p>
         </div>
         <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
@@ -111,10 +111,10 @@ export default function HomePage() {
       </header>
 
       {/* Main Actions */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px', marginBottom: '40px' }}>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '24px', marginBottom: '40px' }}>
         
         {/* Create Room Card */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '16px', padding: '32px' }}>
+        <div className="card flex-column" style={{ alignItems: 'center', textAlign: 'center', gap: '16px', padding: '32px' }}>
           <div style={{ background: 'var(--accent-glow)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--accent-light)' }}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
           </div>
@@ -128,7 +128,7 @@ export default function HomePage() {
         </div>
 
         {/* Join via Code Card */}
-        <div className="card" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center', gap: '16px', padding: '32px' }}>
+        <div className="card flex-column" style={{ alignItems: 'center', textAlign: 'center', gap: '16px', padding: '32px' }}>
           <div style={{ background: 'rgba(6,182,212,0.1)', width: '64px', height: '64px', borderRadius: '50%', display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--cyan)' }}>
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4M10 17l5-5-5-5M15 12H3"/></svg>
           </div>
@@ -136,7 +136,7 @@ export default function HomePage() {
             <h3>Join via Code</h3>
             <p style={{ color: 'var(--text-secondary)', fontSize: '0.9rem', marginTop: '8px' }}>Got a secret 6-character code? Drop it here.</p>
           </div>
-          <form onSubmit={handleJoinByCode} style={{ width: '100%', marginTop: 'auto', display: 'flex', gap: '8px' }}>
+          <form onSubmit={handleJoinByCode} style={{ width: '100%', marginTop: 'auto', display: 'flex', gap: '8px', flexWrap: 'wrap' }}>
             <input 
               type="text" 
               className="input" 
@@ -144,36 +144,39 @@ export default function HomePage() {
               value={joinCode}
               onChange={(e) => setJoinCode(e.target.value.toUpperCase())}
               maxLength={6}
-              style={{ textTransform: 'uppercase', textAlign: 'center', letterSpacing: '4px', fontWeight: 'bold' }}
+              style={{ textTransform: 'uppercase', textAlign: 'center', letterSpacing: '4px', fontWeight: 'bold', flex: 1, minWidth: '120px' }}
             />
-            <button className="btn btn-secondary" disabled={joinCode.length < 6}>Join</button>
+            <button className="btn btn-secondary" disabled={joinCode.length < 6} style={{ flex: '0 0 auto' }}>Join</button>
           </form>
         </div>
       </div>
 
       {/* Public Rooms List */}
       <div>
-        <h2 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px' }}>
+        <h2 style={{ marginBottom: '24px', display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
           Public Lobbies
           <span className="badge badge-purple">{rooms.length} Active</span>
         </h2>
 
         {loading ? (
-          <div style={{ textAlign: 'center', padding: '40px' }}><div className="spinner" style={{ margin: '0 auto' }}></div></div>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
+            {[1,2,3].map(i => <div key={i} className="card skeleton" style={{ height: '160px' }}></div>)}
+          </div>
         ) : rooms.length === 0 ? (
-          <div className="card" style={{ textAlign: 'center', padding: '40px', color: 'var(--text-muted)' }}>
-            No public lobbies available right now. Why not create one?
+          <div className="card" style={{ textAlign: 'center', padding: '60px 20px', color: 'var(--text-muted)' }}>
+            <div style={{ fontSize: '3rem', marginBottom: '16px' }}>👻</div>
+            <p>No public lobbies available right now. Why not create one?</p>
           </div>
         ) : (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))', gap: '16px' }}>
             {rooms.map(room => (
-              <div key={room.id} className="card" style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+              <div key={room.id} className="card flex-column" style={{ gap: '16px' }}>
+                <div className="flex-between" style={{ alignItems: 'flex-start' }}>
                   <h3 style={{ fontSize: '1.1rem', wordBreak: 'break-word' }}>{room.name}</h3>
                   <span className="badge badge-green">{room.code}</span>
                 </div>
                 
-                <div style={{ display: 'flex', justifyContent: 'space-between', color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
+                <div className="flex-between" style={{ color: 'var(--text-secondary)', fontSize: '0.85rem' }}>
                   <span style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                     {room.playerCount} / {room.maxPlayers}
@@ -185,6 +188,7 @@ export default function HomePage() {
                   className="btn btn-secondary btn-full btn-sm"
                   onClick={() => handleJoinClick(room.id)}
                   disabled={room.playerCount >= room.maxPlayers}
+                  style={{ marginTop: 'auto' }}
                 >
                   {room.playerCount >= room.maxPlayers ? 'Room Full' : 'Join Game'}
                 </button>
@@ -197,7 +201,7 @@ export default function HomePage() {
       {/* Create Modal */}
       {showCreate && (
         <div className="modal-overlay" onClick={() => setShowCreate(false)}>
-          <div className="modal" onClick={e => e.stopPropagation()}>
+          <div className="modal flex-column" onClick={e => e.stopPropagation()} style={{ maxHeight: '90vh', overflowY: 'auto' }}>
             <h2 className="modal-title">Host New Game</h2>
             <form onSubmit={handleCreateRoom} className="modal-form">
               <div className="input-group">
@@ -215,7 +219,7 @@ export default function HomePage() {
 
               <div className="input-group">
                 <label className="input-label">Choose a Fun Category</label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '8px' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(140px, 1fr))', gap: '8px' }}>
                   {TOPICS.map(t => (
                     <div 
                       key={t.name}
@@ -228,7 +232,8 @@ export default function HomePage() {
                         textAlign: 'center',
                         background: topic === t.name ? 'var(--accent-glow)' : 'var(--bg-secondary)',
                         border: topic === t.name ? '2px solid var(--accent)' : '1px solid var(--border)',
-                        transition: 'all 0.2s ease'
+                        transition: 'all 0.2s ease',
+                        boxShadow: topic === t.name ? '0 0 10px var(--accent-glow)' : 'none'
                       }}
                     >
                       <div style={{ fontSize: '1.2rem', marginBottom: '4px' }}>{t.icon}</div>
@@ -238,7 +243,7 @@ export default function HomePage() {
                 </div>
               </div>
               
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
+              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '16px' }}>
                 <div className="input-group">
                   <label className="input-label">Rounds</label>
                   <select className="input" value={rounds} onChange={(e) => setRounds(e.target.value)}>
@@ -257,9 +262,9 @@ export default function HomePage() {
                 </div>
               </div>
 
-              <div style={{ display: 'flex', gap: '12px', marginTop: '16px' }}>
-                <button type="button" className="btn btn-ghost btn-full" onClick={() => setShowCreate(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary btn-full" disabled={creating || !roomName.trim()}>
+              <div style={{ display: 'flex', gap: '12px', marginTop: '16px', flexWrap: 'wrap' }}>
+                <button type="button" className="btn btn-ghost" style={{ flex: 1 }} onClick={() => setShowCreate(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary" style={{ flex: 2 }} disabled={creating || !roomName.trim()}>
                   {creating ? 'Creating...' : 'Create Room'}
                 </button>
               </div>
